@@ -1,0 +1,18 @@
+package com.klef.fsd.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.klef.fsd.model.Buyer;
+import com.klef.fsd.model.Seller;
+
+
+public interface BuyerRepository extends JpaRepository<Buyer, Integer> {
+	public Buyer findByEmailAndPassword(String email, String password);
+
+	  
+    Optional<Seller> findByEmail(String email);
+    Seller findByResetToken(String resetToken);
+	
+}

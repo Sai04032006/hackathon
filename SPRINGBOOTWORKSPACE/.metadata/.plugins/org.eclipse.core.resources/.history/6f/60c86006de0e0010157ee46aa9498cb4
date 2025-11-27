@@ -1,0 +1,75 @@
+package com.klef.fsd.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.klef.fsd.model.Admin;
+import com.klef.fsd.model.Buyer;
+import com.klef.fsd.model.Seller;
+import com.klef.fsd.repository.AdminRepository;
+import com.klef.fsd.repository.BuyerRepository;
+import com.klef.fsd.repository.SellerRepository;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	private AdminRepository adminRepository;
+	
+	@Autowired
+	private SellerRepository sellerRepository;
+	
+	@Autowired
+	private BuyerRepository buyerRepository;
+
+	@Override
+	public Admin checkadminlogin(String username, String password) {
+		return adminRepository.findByUsernameAndPassword(username, password);
+	}
+
+	@Override
+	public String addSeller(Seller seller) {
+		
+		sellerRepository.save(seller);
+		return  "Seller Added Succesfully";
+	}
+
+	@Override
+	public List<Seller> viewSellers() {
+
+		return sellerRepository.findAll();
+	}
+
+	@Override
+	public List<Buyer> viewBuyers() {
+
+		return buyerRepository.findAll();
+	}
+
+	@Override
+	public String deleteSeller(int id) {
+		Optional<Seller> seller = sellerRepository.findById(id);
+		if (buyer.isPresent()) {
+			buyerRepository.deleteById(id);
+			return "Buyer Deleted Succesfully";
+		}
+		else {
+			return "Buyer Id not Found";
+		}
+	}
+
+	@Override
+	public String deleteBuyer(int id) {
+		Optional<Buyer> buyer = buyerRepository.findById(id);
+		if (buyer.isPresent()) {
+			buyerRepository.deleteById(id);
+			return "Buyer Deleted Succesfully";
+		}
+		else {
+			return "Buyer Id not Found";
+		}
+	}
+
+}

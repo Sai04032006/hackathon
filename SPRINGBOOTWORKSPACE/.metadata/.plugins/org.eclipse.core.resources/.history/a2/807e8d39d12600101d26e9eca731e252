@@ -1,0 +1,23 @@
+package com.klef.fsd.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.fsd.model.Buyer;
+
+import com.klef.fsd.repository.BuyerRepository;
+
+@Service
+public class BuyerServiceImpl implements BuyerService {
+
+	@Autowired
+	private BuyerRepository buyerRepository;
+
+	@Override
+	public String buyerRegistration(Buyer buyer) {
+		buyerRepository.save(buyer);
+		return "Buyer Registered Successfully";
+	}
+
+	
+}

@@ -1,0 +1,16 @@
+package com.klef.fsd.controller;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.klef.fsd.service.BuyerService;
+
+@RestController
+@RequestMapping("/buyer")
+@CrossOrigin("*")
+public class BuyerController {
+	
+	private BuyerService 
+
+}

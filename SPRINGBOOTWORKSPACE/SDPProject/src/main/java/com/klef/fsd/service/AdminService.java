@@ -1,0 +1,36 @@
+
+package com.klef.fsd.service;
+
+import java.util.List;
+
+import com.klef.fsd.model.Admin;
+import com.klef.fsd.model.Buyer;
+import com.klef.fsd.model.Seller;
+
+public interface AdminService 
+{
+  public Admin checkadminlogin(String username,String password);
+  
+  public String addSeller(Seller seller);
+  
+  public List<Seller> viewSellers();
+  
+  public List<Buyer> viewBuyers();
+  
+  public String deleteSeller(int id);
+  
+  public String deleteBuyer(int id);
+  
+  public List<Seller> viewPendingSellers();
+  public String approveSeller(int sellerId);
+
+  
+  
+//  public String addeventmanager(Manager manager);
+//  public List<Manager> displayeventmanagers();
+//  
+//  public List<Customer> displaycustomers();
+//  public String deletecustomer(int cid);
+//
+  
+}

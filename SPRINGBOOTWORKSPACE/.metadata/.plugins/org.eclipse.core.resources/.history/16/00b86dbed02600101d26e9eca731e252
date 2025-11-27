@@ -1,0 +1,5 @@
+package com.klef.fsd.model;
+
+public class EmailDetails {
+
+}

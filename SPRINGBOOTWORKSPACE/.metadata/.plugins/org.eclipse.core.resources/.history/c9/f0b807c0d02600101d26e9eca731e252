@@ -1,0 +1,8 @@
+package com.klef.fsd.model;
+
+import jakarta.persistence.Entity;
+
+@Entity
+public class EmailDetails {
+
+}

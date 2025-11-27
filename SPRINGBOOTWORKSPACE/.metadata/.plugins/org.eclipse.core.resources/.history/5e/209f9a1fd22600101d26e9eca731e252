@@ -1,0 +1,21 @@
+package com.klef.fsd.service;
+
+import java.util.List;
+import com.klef.fsd.model.Seller;
+
+public interface SellerService {
+    public String sellerRegistration(Seller seller);
+    public Seller checkSellerLogin(String username ,String password);
+    public List<Seller> viewPendingSellers();
+    public String approveSeller(int sellerId);
+    public String rejectSeller(int id);
+    public String deleteSeller(int id);
+    public Seller getSellerById(int sid);
+    public String updateSellerProfile(Seller seller); 
+    public List<Seller> viewAllSellers();
+    
+    
+
+    
+
+}

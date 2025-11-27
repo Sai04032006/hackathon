@@ -1,0 +1,39 @@
+package com.klef.fsd.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.fsd.model.Buyer;
+
+import com.klef.fsd.repository.BuyerRepository;
+@Service
+public class BuyerServiceImpl implements BuyerService{
+
+	@Autowired
+	private BuyerRepository buyerRepository;
+	@Override
+	public String buyerRegistration(Buyer buyer) {
+		buyerRepository.save(buyer);
+		return "Buyer Registered Successfully";
+	}
+
+	@Override
+	public Buyer checkBuyerLogin(String email, String password) {
+		
+		return buyerRepository.findByEmailAndPassword(email, password);
+	}
+
+	
+	@Autowired
+	private EmailService emailService;
+
+	public String forgotPassword(String email) {
+	    Buyer buyer = buyerRepository.findByEmail(email);
+	    if (buyer != null) {
+	        emailService.sendEmail(email, "Password Recovery", "Your Password: " + buyer.getPassword());
+	        return "Password sent to your email.";
+	    } else {
+	        return "Email not registered.";
+	    }
+
+}

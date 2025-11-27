@@ -1,0 +1,56 @@
+package com.klef.fsd.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.klef.fsd.model.Admin;
+import com.klef.fsd.model.Buyer;
+import com.klef.fsd.model.Seller;
+import com.klef.fsd.repository.AdminRepository;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+	@Autowired
+	private AdminRepository adminRepository;
+	
+	@Autowired
+	private 
+
+	@Override
+	public Admin checkadminlogin(String username, String password) {
+		return adminRepository.findByUsernameAndPassword(username, password);
+	}
+
+	@Override
+	public String addSeller(Seller seller) {
+
+		return null;
+	}
+
+	@Override
+	public List<Seller> sellers() {
+
+		return null;
+	}
+
+	@Override
+	public List<Buyer> buyers() {
+
+		return null;
+	}
+
+	@Override
+	public String deleteSeller(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String deleteBuyer(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

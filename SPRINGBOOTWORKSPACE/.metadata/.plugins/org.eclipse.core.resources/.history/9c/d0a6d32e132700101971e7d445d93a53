@@ -1,0 +1,27 @@
+# Project Info
+spring.application.name=SDPProject
+server.port=2004
+
+# Database Config
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/lldb
+spring.datasource.username=root
+spring.datasource.password=root
+
+# JPA & Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+
+# ✅ File Upload Limit Fix
+spring.servlet.multipart.max-file-size=20MB
+spring.servlet.multipart.max-request-size=20MB
+
+#Mail configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=2300090230csit@gmail.com
+spring.mail.password=yaip pkpg nqls putq
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true

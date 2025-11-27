@@ -1,0 +1,147 @@
+package com.klef.fsd.service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.fsd.model.EmailDetails;
+import com.klef.fsd.model.Seller;
+import com.klef.fsd.repository.SellerRepository;
+
+@Service
+public class SellerServiceImpl implements SellerService {
+
+	@Autowired
+	private SellerRepository sellerRepository;
+	
+	@Autowired
+	private EmailService emailService;
+
+	@Override
+	public String sellerRegistration(Seller seller) {
+		seller.setStatus("Pending");
+		sellerRepository.save(seller);
+		return "Seller Registered Successfully!";
+	}
+
+	@Override
+	public Seller checkSellerLogin(String username, String password) {
+		Seller seller = sellerRepository.findByUsernameAndPassword(username, password);
+		if (seller != null && "Approved".equalsIgnoreCase(seller.getStatus())) {
+			return seller;
+		}
+		return null;
+	}
+
+	@Override
+	public List<Seller> viewPendingSellers() {
+		return sellerRepository.findByStatus("Pending");
+	}
+
+	@Override
+	public String approveSeller(int sellerId) {
+		Optional<Seller> optionalSeller = sellerRepository.findById(sellerId);
+		if (optionalSeller.isPresent()) {
+			Seller seller = optionalSeller.get();
+			seller.setStatus("Approved");
+			sellerRepository.save(seller);
+			return "Seller approved successfully.";
+		} else {
+			return "Seller not found.";
+		}
+	}
+
+	@Override
+	public String rejectSeller(int id) {
+		Optional<Seller> optionalSeller = sellerRepository.findById(id);
+		if (optionalSeller.isPresent()) {
+			Seller seller = optionalSeller.get();
+			seller.setStatus("Rejected");
+			sellerRepository.save(seller);
+			return "Seller rejected successfully";
+		} else {
+			return "Seller not found";
+		}
+	}
+
+	@Override
+	public String deleteSeller(int id) {
+		Optional<Seller> optionalSeller = sellerRepository.findById(id);
+		if (optionalSeller.isPresent()) {
+			sellerRepository.deleteById(id);
+			return "Seller deleted successfully";
+		} else {
+			return "Seller not found";
+		}
+	}
+
+	@Override
+	public Seller getSellerById(int sid) {
+
+		return sellerRepository.findById(sid).get();
+	}
+
+	@Override
+	public String updateSellerProfile(Seller seller) {
+		Optional<Seller> optionalSeller = sellerRepository.findById(seller.getId());
+		if (optionalSeller.isPresent()) {
+
+			Seller s = optionalSeller.get();
+			s.setLocation(seller.getLocation());
+			s.setMobileno(seller.getMobileno());
+			s.setNationalidno(seller.getNationalidno());
+			s.setUsername(s.getUsername());
+			s.setEmail(seller.getEmail());
+			sellerRepository.save(s);
+			return "Seller Updated Successfully";
+		} else {
+			return "Seller not found";
+		}
+
+	}
+
+	@Override
+	public List<Seller> viewAllSellers() {
+
+		return sellerRepository.findAll();
+	}
+
+	 public String generateResetToken(String email) {
+	        Optional<Seller> sellerOpt = sellerRepository.findByEmail(email);
+	        if (sellerOpt.isEmpty()) {
+	            return "Seller not found!";
+	        }
+
+	        Seller seller = sellerOpt.get();
+	        String resetToken = UUID.randomUUID().toString();
+	        seller.setResetToken(resetToken);
+	        sellerRepository.save(seller);
+
+	        String resetLink = "http://localhost:5173/reset-password?token=" + resetToken;
+	        EmailDetails mail = new EmailDetails();
+	        mail.setRecipient(email);
+	        mail.setSubject("Password Reset Link");
+	        mail.setMsgBody("Click here to reset your password: " + resetLink);
+
+	        emailService.sendSimpleMail(mail);
+	        return "Reset link sent to your email";
+	    }
+
+	    @Override
+	    public String resetPassword(String token, String newPassword) {
+	        Seller seller = sellerRepository.findByResetToken(token);
+	        if (seller == null) {
+	            return "Invalid token!";
+	        }
+
+	        seller.setPassword(newPassword); // add encoder if needed
+	        seller.setResetToken(null);
+	        sellerRepository.save(seller);
+	        return "Password updated successfully!";
+	    }
+	
+
+}

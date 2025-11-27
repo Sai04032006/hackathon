@@ -1,0 +1,14 @@
+package com.klef.fsd.model;
+
+import jakarta.persistence.Entity;
+
+@Entity
+public class EmailDetails {
+	
+	private String recipient;
+    private String subject;
+    private String msgBody;
+    
+    
+
+}

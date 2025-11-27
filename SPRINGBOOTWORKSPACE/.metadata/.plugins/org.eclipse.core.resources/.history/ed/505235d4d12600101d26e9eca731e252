@@ -1,0 +1,132 @@
+package com.klef.fsd.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.klef.fsd.model.Seller;
+import com.klef.fsd.service.SellerService;
+
+@RestController
+@RequestMapping("/seller")
+@CrossOrigin("*")
+public class SellerController {
+
+	@Autowired
+	private SellerService sellerService;
+
+	@PostMapping("/registration")
+	public ResponseEntity<String> sellerRegistration(@RequestBody Seller seller) {
+		try {
+			String output = sellerService.sellerRegistration(seller);
+			return ResponseEntity.ok(output);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Seller registration failed.");
+		}
+	}
+
+	@PostMapping("/checksellerlogin")
+	public ResponseEntity<?> checkSellerLogin(@RequestBody Seller seller) {
+		Seller s = sellerService.checkSellerLogin(seller.getUsername(), seller.getPassword());
+		if (s != null) {
+			return ResponseEntity.ok(s);
+		} else {
+			return ResponseEntity.status(401).body("Invalid credentials or not approved.");
+		}
+	}
+
+	@GetMapping("/pending")
+	public ResponseEntity<List<Seller>> viewPendingSellers() {
+		List<Seller> list = sellerService.viewPendingSellers();
+		return ResponseEntity.ok(list);
+	}
+
+	@PutMapping("/approve/{id}")
+	public ResponseEntity<String> approveSeller(@PathVariable("id") int id) {
+		String result = sellerService.approveSeller(id);
+		return ResponseEntity.ok(result);
+	}
+	
+	@PutMapping("/reject/{id}")
+	public ResponseEntity<String> rejectSeller(@PathVariable("id") int id) {
+	    String result = sellerService.rejectSeller(id);
+	    return ResponseEntity.ok(result);
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<String> deleteSeller(@RequestParam("id") int id) {
+	    String result = sellerService.deleteSeller(id);
+	    return ResponseEntity.ok(result);
+	}
+	
+	@PutMapping("/updateseller")
+	public ResponseEntity<String> sellerupdateprofile(@RequestBody Seller seller)
+	   {
+	 	  try
+	 	   {
+	 		  System.out.println(seller.toString());
+	 		  String output = sellerService.updateSellerProfile(seller);
+	 		  return ResponseEntity.ok(output);
+	 	   }
+	 	   catch(Exception e)
+	 	   {
+	 		    System.out.println(e.getMessage());
+	 		    return ResponseEntity.status(500).body("Failed to Update Seller ... !!"); 
+	 	   }
+	   }
+	@GetMapping("/viewallsellers")
+	public List<Seller> viewAllSellers() {
+		
+		return sellerService.viewAllSellers();
+				
+	}
+	
+	@PostMapping("forgot-password")
+	public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+	    Optional<Seller> sellerOpt = sellerRepository.findByEmail(email);
+	    if (sellerOpt.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Seller not found!");
+	    }
+
+	    String resetToken = UUID.randomUUID().toString();
+	    // Save token with seller
+	    Seller seller = sellerOpt.get();
+	    seller.setResetToken(resetToken);
+	    sellerRepository.save(seller);
+
+	    String resetLink = "http://localhost:5173/reset-password?token=" + resetToken;
+	    EmailDetails mail = new EmailDetails();
+	    mail.setRecipient(email);
+	    mail.setSubject("Password Reset Link");
+	    mail.setMsgBody("Click here to reset your password: " + resetLink);
+
+	    emailService.sendSimpleMail(mail);
+	    return ResponseEntity.ok("Reset link sent to your email");
+	}
+
+	@PostMapping("reset-password")
+	public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+	    Seller seller = sellerRepository.findByResetToken(token);
+	    if (seller == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token!");
+	    }
+
+	    seller.setPassword(newPassword); // Ideally, encode this
+	    seller.setResetToken(null); // Clear token after use
+	    sellerRepository.save(seller);
+	    return ResponseEntity.ok("Password updated successfully!");
+	}
+
+	
+}

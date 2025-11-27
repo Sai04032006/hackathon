@@ -1,0 +1,7 @@
+package com.greenbyte.service;
+
+import com.greenbyte.model.EmailDetails;
+
+public interface EmailService {
+    String sendSimpleMail(EmailDetails details);
+}
