@@ -6,12 +6,12 @@ services:
       MYSQL_ROOT_PASSWORD: lokesh
       MYSQL_DATABASE: hackathondb
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
   backend:
-    image: sailokeshreddy123/hackathon-frontend:latest
+    image: sailokeshreddy123/hackathon-backend:latest
     container_name: springboot
     ports:
       - "2222:2004"
@@ -20,7 +20,7 @@ services:
     restart: on-failure
 
   frontend:
-    image: sailokeshreddy123/hackathon-backend:latest
+    image: sailokeshreddy123/hackathon-frontend:latest
     container_name: react
     ports:
       - "1234:80"
